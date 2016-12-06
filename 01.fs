@@ -73,9 +73,16 @@ let readInput =
     let input = Seq.cache <| System.IO.File.ReadLines(@"/home/alan/hdd/code/aadvent/input/01.txt")
     Seq.map readOrder (Seq.map Seq.toList input)
 
+let dist (x1,y1) (x2,y2) =
+    let dx = abs (x1 - x2)
+    let dy = abs (y1 - y2)
+    dx + dy
+
 let main =
     let orders = readInput
     let landmarks = Seq.map snd <| Seq.scan followOneOrder ((1,0),(0,0)) orders
-    let (lat, long) = Seq.last landmarks
-    Console.WriteLine("Santa will travel " + string (Operators.abs lat + Operators.abs long) + " blocks")
-    Console.WriteLine("first duplicate: " + string (Seq.head landmarks))
+    let final = Seq.last landmarks
+    Console.WriteLine("Santa will travel " + string (dist (0,0) final) + " blocks")
+    let wholePath = interpolate landmarks
+    let firstDupe = checkMatch wholePath
+    Console.WriteLine("first duplicate: " + string (dist (0,0) firstDupe) + " away")

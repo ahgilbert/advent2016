@@ -54,20 +54,20 @@ let rec checkMatch xs =
          else checkMatch later
 
 let connectPoints ((x1,y1),(x2,y2)) =
-    match (x1, x2) with
-    | (0,0) -> let steps = Seq.map (fun y -> (0,y)) [min y1 y2..max y1 y2]
-               if y1 < y2
-               then Seq.take (Seq.length steps - 1) steps
-               else Seq.rev <| Seq.tail steps
-    | _ -> let steps = Seq.map (fun x -> (x,0)) [min x1 x2..max x1 x2]
-           if x1 < x2
-           then Seq.take (Seq.length steps - 1) steps
-           else Seq.rev <| Seq.tail steps
+    match (x1 = x2) with
+    | true -> let steps = Seq.map (fun y -> (x1,y)) [min y1 y2..max y1 y2]
+              if y1 < y2
+              then Seq.tail steps
+              else Seq.tail <| Seq.rev steps
+    | false -> let steps = Seq.map (fun x -> (x,y1)) [min x1 x2..max x1 x2]
+               if x1 < x2
+               then Seq.tail steps
+               else Seq.tail <| Seq.rev steps
 
 let interpolate xs =
     let legs = Seq.pairwise xs
-    let paces = Seq.map connectPoints legs
-    paces
+    let paces = Seq.concat <| Seq.map connectPoints legs
+    Seq.append [Seq.head xs] paces
 
 let readInput =
     let input = Seq.cache <| System.IO.File.ReadLines(@"/home/alan/hdd/code/aadvent/input/01.txt")

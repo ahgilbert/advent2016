@@ -56,9 +56,13 @@ let rec checkMatch xs =
 let connectPoints ((x1,y1),(x2,y2)) =
     match (x1, x2) with
     | (0,0) -> let steps = Seq.map (fun y -> (0,y)) [min y1 y2..max y1 y2]
-               if y1 < y2 then steps else Seq.rev steps
+               if y1 < y2
+               then Seq.take (Seq.length steps - 1) steps
+               else Seq.rev <| Seq.tail steps
     | _ -> let steps = Seq.map (fun x -> (x,0)) [min x1 x2..max x1 x2]
-           if x1 < x2 then steps else Seq.rev steps
+           if x1 < x2
+           then Seq.take (Seq.length steps - 1) steps
+           else Seq.rev <| Seq.tail steps
 
 let interpolate xs =
     let legs = Seq.pairwise xs

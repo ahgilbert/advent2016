@@ -38,14 +38,40 @@ let addTuples (a,b) (c,d) =
 let step dir dist head loc =
     let newDir = pivot dir head
     let scaled = scalarMultiply newDir dist
-    (newDir, addTuples loc scaled)
+    let newLocation = addTuples loc scaled
+    (newDir, newLocation)
 
 let followOneOrder (heading, location) (dir, dist) =
     step dir dist heading location
 
-let main =
+let rec checkMatch xs =
+    if Seq.isEmpty xs
+    then raise <| Bunk "no duplicates"
+    else let here = Seq.head xs
+         let later = Seq.tail xs
+         if Seq.exists (fun x -> x = here) later
+         then here
+         else checkMatch later
+
+let connectPoints ((x1,y1),(x2,y2)) =
+    match (x1, x2) with
+    | (0,0) -> let steps = Seq.map (fun y -> (0,y)) [min y1 y2..max y1 y2]
+               if y1 < y2 then steps else Seq.rev steps
+    | _ -> let steps = Seq.map (fun x -> (x,0)) [min x1 x2..max x1 x2]
+           if x1 < x2 then steps else Seq.rev steps
+
+let interpolate xs =
+    let legs = Seq.pairwise xs
+    let paces = Seq.map connectPoints legs
+    paces
+
+let readInput =
     let input = Seq.cache <| System.IO.File.ReadLines(@"/home/alan/hdd/code/aadvent/input/01.txt")
-    let orders = Seq.map readOrder (Seq.map Seq.toList input)
-    let (_, (lat,long)) = Seq.fold followOneOrder ((1,0),(0,0)) orders
-    Console.WriteLine("Lat: " + string lat + " Long: " + string long)
+    Seq.map readOrder (Seq.map Seq.toList input)
+
+let main =
+    let orders = readInput
+    let landmarks = Seq.map snd <| Seq.scan followOneOrder ((1,0),(0,0)) orders
+    let (lat, long) = Seq.last landmarks
     Console.WriteLine("Santa will travel " + string (Operators.abs lat + Operators.abs long) + " blocks")
+    Console.WriteLine("first duplicate: " + string (Seq.head landmarks))

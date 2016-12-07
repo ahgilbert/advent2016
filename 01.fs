@@ -1,8 +1,6 @@
 module D1
 
 open System
-open System.Numerics
-open System.Text.RegularExpressions
 
 exception Bunk of string
 

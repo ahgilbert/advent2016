@@ -68,7 +68,7 @@ let interpolate xs =
     Seq.append [Seq.head xs] paces
 
 let readInput =
-    let input = Seq.cache <| System.IO.File.ReadLines(@"/home/alan/hdd/code/aadvent/input/01.txt")
+    let input = Seq.cache <| System.IO.File.ReadLines("input/01.txt")
     Seq.map readOrder (Seq.map Seq.toList input)
 
 let dist (x1,y1) (x2,y2) =

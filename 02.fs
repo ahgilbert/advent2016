@@ -21,7 +21,7 @@ let numPad1 =
       for b in 1..3 do
           yield (a,b) ]
     |> (fun xs -> Seq.zip xs "123456789")
-    |> Set.ofSeq
+    |> Map.ofSeq
 
 let numPad2 =
     Seq.concat [[(3,1)];
@@ -29,8 +29,8 @@ let numPad2 =
                 [ for x in 1..5 do yield (x,3) ];
                 [ for x in 2..4 do yield (x,4) ];
                 [(3,5)]]
-    |> (fun xs -> Set.zip xs "123456789ABCD")
-    |> Set.ofSeq
+    |> (fun xs -> Seq.zip xs "123456789ABCD")
+    |> Map.ofSeq
 
 let boundedMove validKeys (x,y) d =
     let newLoc =
@@ -39,12 +39,12 @@ let boundedMove validKeys (x,y) d =
         | Left -> (x - 1, y)
         | Up -> (x, y-1)
         | Down -> (x, y+1)
-    if Set.contains newLoc validKeys
+    if Map.containsKey newLoc validKeys
     then newLoc
     else (x,y)
 
-let getDigit (x,y) =
-    x + ((y - 1) * keypad_size)
+let getDigit numPad k =
+    Map.find k
     
 let getNextKey keypad start orders =
     Seq.fold (boundedMove keypad) start orders
@@ -52,14 +52,16 @@ let getNextKey keypad start orders =
 let readInput file =
     Seq.cache <| System.IO.File.ReadLines(file)
     |> Seq.map Seq.toList
-
-let day2a file =
-    readInput file
     |> Seq.map (Seq.map readDirection)
-    |> Seq.scan (getNextKey (map fst numPad1)) (2,2)
+
+let day2 numPad start input =
+    Seq.scan (getNextKey numPad) start input
     |> Seq.tail
     |> Seq.map getDigit
-    |> Seq.map string
-    |> Seq.map Console.WriteLine
+
+let main =
+    let input = readInput @"/home/alan/hdd/code/aadvent/input/02.txt"
+    let d2a = day2 numPad1 (2,2) input
+    let d2b = day2 numPad2 (3,1) input
+    Console.WriteLine d2a
     
-let main = day2a @"/home/alan/hdd/code/aadvent/input/02.txt"

@@ -1,4 +1,4 @@
-module Day1
+module D1
 
 open System
 open System.Numerics
@@ -82,7 +82,7 @@ let main =
     let orders = readInput
     let landmarks = Seq.map snd <| Seq.scan followOneOrder ((1,0),(0,0)) orders
     let final = Seq.last landmarks
-    Console.WriteLine("Santa will travel " + string (dist (0,0) final) + " blocks")
+    Console.WriteLine("Santa will wind up " + string (dist (0,0) final) + " blocks away from his origin")
     let wholePath = interpolate landmarks
     let firstDupe = checkMatch wholePath
-    Console.WriteLine("first duplicate: " + string (dist (0,0) firstDupe) + " away")
+    Console.WriteLine("The first duplicate is " + string (dist (0,0) firstDupe) + " away")

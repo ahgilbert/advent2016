@@ -16,7 +16,7 @@ let readDirection c =
     | 'D' -> Down
     |  _  -> raise <| Bunk "bad direction"
 
-let numPad1 =
+let numPad1 : Map<(int * int), char> =
     [ for a in 1..3 do
       for b in 1..3 do
           yield (a,b) ]
@@ -43,10 +43,10 @@ let boundedMove validKeys (x,y) d =
     then newLoc
     else (x,y)
 
-let getDigit numPad k =
-    Map.find k
+let getButton numPad k =
+    Map.find k numPad
     
-let getNextKey keypad start orders =
+let getNextKey (keypad : Map<(int * int), char>) start orders =
     Seq.fold (boundedMove keypad) start orders
 
 let readInput file =
@@ -57,11 +57,11 @@ let readInput file =
 let day2 numPad start input =
     Seq.scan (getNextKey numPad) start input
     |> Seq.tail
-    |> Seq.map getDigit
+    |> Seq.map (getButton numPad)
+    |> String.Concat
 
 let main =
-    let input = readInput @"/home/alan/hdd/code/aadvent/input/02.txt"
+    let input = readInput "input/02.txt"
     let d2a = day2 numPad1 (2,2) input
     let d2b = day2 numPad2 (3,1) input
-    Console.WriteLine d2a
-    
+    Console.WriteLine "how the hell do I display these values?"

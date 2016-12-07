@@ -64,4 +64,4 @@ let main =
     let input = readInput "input/02.txt"
     let d2a = day2 numPad1 (2,2) input
     let d2b = day2 numPad2 (3,1) input
-    Console.WriteLine "how the hell do I display these values?"
+    Console.WriteLine "how do I display these values?"

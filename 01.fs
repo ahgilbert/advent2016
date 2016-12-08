@@ -11,7 +11,7 @@ let castDir d =
     match d with
     | 'R' -> R
     | 'L' -> L
-    | x -> raise <| Bunk("bad turn direction")
+    | x -> failwith "bad turn direction"
 
 let readOrder (h :: ts) =
     let dir = castDir h

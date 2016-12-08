@@ -6,15 +6,13 @@ type Dir = Right | Left | Up | Down
 
 let keypad_size = 3
 
-exception Bunk of string
-
 let readDirection c =
     match c with
     | 'R' -> Right
     | 'L' -> Left
     | 'U' -> Up
     | 'D' -> Down
-    |  _  -> raise <| Bunk "bad direction"
+    |  _  -> failwith "bad direction"
 
 let numPad1 : Map<(int * int), char> =
     [ for a in 1..3 do
@@ -64,4 +62,5 @@ let main =
     let input = readInput "input/02.txt"
     let d2a = day2 numPad1 (2,2) input
     let d2b = day2 numPad2 (3,1) input
-    Console.WriteLine "how do I display these values?"
+    Console.WriteLine d2a
+    Console.WriteLine d2b

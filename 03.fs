@@ -3,7 +3,7 @@ module D3
 
 open System
 
-let transpose3 xs =
+let sideways xs =
     let xs = Seq.map (fun a -> Seq.item 0 a) xs
     let ys = Seq.map (fun a -> Seq.item 1 a) xs
     let zs = Seq.map (fun a -> Seq.item 2 a) xs
@@ -16,14 +16,23 @@ let readInput =
     let faith (s : string) = s.Split ' '
                              |> Seq.filter (fun x -> x <> "") 
                              |> Seq.map Int32.Parse
-    System.IO.File.ReadLines "input/03.txt"
+    Seq.cache <| System.IO.File.ReadLines "input/03.txt"
     |> Seq.map faith
 
 let parseInputA input =
     Seq.map seqToTriplet input
 
-let parseInputB =
-    readInput
+let rec chunk n xs =
+    match Seq.isEmpty xs with
+    | true -> seq []
+    | false ->
+      let zz = Seq.take n xs
+      let yy = Seq.skip n xs
+      Seq.append (seq [zz]) (chunk n yy) 
+
+let parseInputB input =
+    let a = sideways input
+    "ahg"
 
 let legit ((a,b,c) : (int * int * int)) =
     let sorted = Seq.sort [a;b;c] |> Seq.rev

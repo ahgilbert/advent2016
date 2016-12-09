@@ -3,17 +3,27 @@ module D3
 
 open System
 
-let readInput = System.IO.File.ReadLines "input/03.txt"
+let transpose3 xs =
+    let xs = Seq.map (fun a -> Seq.item 0 a) xs
+    let ys = Seq.map (fun a -> Seq.item 1 a) xs
+    let zs = Seq.map (fun a -> Seq.item 2 a) xs
+    Seq.concat [ xs; ys; zs; ]
 
 let seqToTriplet threes =
     (Seq.item 0 threes, Seq.item 1 threes, Seq.item 2 threes)
 
-let parseInputA input =
+let readInput =
     let faith (s : string) = s.Split ' '
                              |> Seq.filter (fun x -> x <> "") 
                              |> Seq.map Int32.Parse
-                             |> seqToTriplet
-    Seq.map faith input
+    System.IO.File.ReadLines "input/03.txt"
+    |> Seq.map faith
+
+let parseInputA input =
+    Seq.map seqToTriplet input
+
+let parseInputB =
+    readInput
 
 let legit ((a,b,c) : (int * int * int)) =
     let sorted = Seq.sort [a;b;c] |> Seq.rev

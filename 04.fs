@@ -10,7 +10,7 @@ let roomRegex = Regex("([a-z-]+)-(\d+)\[([a-z]+)\]$")
 let readRoom str =
     let faith = roomRegex.Match str
     let name = faith.Groups.[1].Value
-    let sector = faith.Groups.[2].Value
+    let sector = Int32.Parse (faith.Groups.[2].Value)
     let checksum = faith.Groups.[3].Value
     (name, sector, checksum)
 
@@ -42,5 +42,5 @@ let main =
     |> Seq.map readRoom
     |> Seq.filter checkEntry
     |> Seq.map (fun (_,x,_) -> x)
-    |> Seq.length
+    |> Seq.sum
     |> Console.WriteLine

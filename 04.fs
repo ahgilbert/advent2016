@@ -17,23 +17,30 @@ let readRoom str =
 let genChecksum name =
     Seq.filter (fun c -> c <> '-') name
     |> Seq.groupBy id
-    |> Seq.sortBy (fun (_,x) -> 0 - Seq.length x)
+    |> Seq.groupBy (fun (_,x) -> Seq.length x)
+    |> Seq.sortBy fst
+    |> Seq.rev
+    |> Seq.map snd
+    |> Seq.map (Seq.map fst)
+    |> Seq.map Seq.sort
+    |> Seq.concat
     |> Seq.take 5
-    |> Seq.map fst
     |> Seq.map string
     |> String.concat ""
-    |> Console.WriteLine
+
+let checkEntry (name, sector, checksum) =
+    checksum = genChecksum name
 
 let readLines day =
     "input/" + (string day).PadLeft (2,'0') + ".txt"
     |> File.ReadLines 
 
-let input = readLines 4
+let input = Seq.cache <| readLines 4
 
 let main =
     input
     |> Seq.map readRoom
-    |> Seq.head
-    |> (fun (x,_,_) -> x)
-    |> genChecksum
+    |> Seq.filter checkEntry
+    |> Seq.map (fun (_,x,_) -> x)
+    |> Seq.length
     |> Console.WriteLine

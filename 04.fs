@@ -37,10 +37,39 @@ let readLines day =
 
 let input = Seq.cache <| readLines 4
 
+let c2nMap =
+    Seq.zip "abcdefghijklmnopqrstuvwxyz" [1..99]
+    |> Map.ofSeq
+
+let n2cMap =
+    Seq.zip [1..99] "abcdefghijklmnopqrstuvwxyz"
+    |> Map.ofSeq
+
+let charToNumber c =
+    Map.find c c2nMap
+
+let numberToChar n =
+    Map.find n n2cMap
+
+let shiftCipher n c =
+    let n' = n % 26
+    (n' + charToNumber c) % 26
+    |> numberToChar
+
+let decode name sector =
+    Seq.map (shiftCipher sector) name
+
 let main =
-    input
-    |> Seq.map readRoom
-    |> Seq.filter checkEntry
-    |> Seq.map (fun (_,x,_) -> x)
-    |> Seq.sum
-    |> Console.WriteLine
+    let legitEntries =
+        input
+        |> Seq.map readRoom
+        |> Seq.filter checkEntry
+    let sumOfSectors =
+        legitEntries
+        |> Seq.map (fun (_,x,_) -> x)
+        |> Seq.sum
+    Console.WriteLine sumOfSectors
+    let trueNames =
+        legitEntries
+        |> Seq.map (fun (n,s,_) -> decode n s)
+    Console.WriteLine trueNames

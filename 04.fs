@@ -38,11 +38,11 @@ let readLines day =
 let input = Seq.cache <| readLines 4
 
 let c2nMap =
-    Seq.zip "abcdefghijklmnopqrstuvwxyz" [1..99]
+    Seq.zip "abcdefghijklmnopqrstuvwxyz" [0..99]
     |> Map.ofSeq
 
 let n2cMap =
-    Seq.zip [1..99] "abcdefghijklmnopqrstuvwxyz"
+    Seq.zip [0..99] "abcdefghijklmnopqrstuvwxyz"
     |> Map.ofSeq
 
 let charToNumber c =
@@ -58,11 +58,12 @@ let shiftCipher n c =
 
 let decode name sector =
     Seq.map (fun c ->
-                 printf "%c" c
                  match c with
                  | '-' -> ' '
                  |  _  -> shiftCipher sector c)
             name
+    |> Seq.map string
+    |> String.concat ""
 
 let main =
     let legitEntries =
@@ -76,5 +77,6 @@ let main =
     Console.WriteLine sumOfSectors
     let trueNames =
         legitEntries
-        |> Seq.map (fun (n,s,_) -> decode n s)
-    Console.WriteLine trueNames
+        |> Seq.map (fun (n,s,_) -> (decode n s, s))
+        |> Seq.toList
+    ignore <| List.map (printf "%A\n") trueNames

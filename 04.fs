@@ -57,7 +57,12 @@ let shiftCipher n c =
     |> numberToChar
 
 let decode name sector =
-    Seq.map (shiftCipher sector) name
+    Seq.map (fun c ->
+                 printf "%c" c
+                 match c with
+                 | '-' -> ' '
+                 |  _  -> shiftCipher sector c)
+            name
 
 let main =
     let legitEntries =

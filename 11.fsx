@@ -2,6 +2,9 @@ type Machine = Chip of string | Gen of string
 type Scene = int * list<list<Machine>>
 type Move = U | D
 
+let testInput =
+    (0, [[Chip "H"; Chip "Li"]; [Gen "H"]; [Gen "Li"]; []])
+
 let input = 
     (0,
      [[Gen "Po"; Gen "Tm"; Chip "Tm"; Gen "Pm"; Gen "Ru"; Chip "Ru"; Gen "Co"; Chip "Co"];

@@ -47,7 +47,7 @@ let isLegalState (level, distribution) =
     && List.map (explodes >> not) distribution
     |> all
 
-let move dir cargo (currentFloor, floors) =
+let move (dir, cargo, (currentFloor, floors)) =
 // update game state
     let destFloor = currentFloor + dir
     let staysPut = fun m -> not <| List.contains m cargo
@@ -75,3 +75,8 @@ let generateMoves (currentFloor, floors) =
      for cargo in possibleCargo do
      yield (dir, cargo, (currentFloor, floors))]
     |> Seq.toList
+
+let nextGeneration scene =
+    let moves = generateMoves scene
+    let nextStates = List.map move moves
+    List.filter isLegalState nextStates
